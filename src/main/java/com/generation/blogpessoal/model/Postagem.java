@@ -22,7 +22,7 @@ public class Postagem {
 	
 	@NotBlank(message = "O atributo título é obrigatório!")
 	@Size(min = 5, max = 100, message = "O atributo título deve conter entre 5 e 100 caracteres")
-	private String título;
+	private String titulo;
 	
 	@NotBlank(message = "O atributo título é obrigatório!")
 	@Size(min = 10, max = 1000, message = "O atributo título deve conter entre 10 e 1000 caracteres")
@@ -42,12 +42,12 @@ public class Postagem {
 		this.id = id;
 	}
 
-	public String getTítulo() {
-		return título;
+	public String getTitulo() {
+		return titulo;
 	}
 
-	public void setTítulo(String título) {
-		this.título = título;
+	public void setTitulo(String título) {
+		this.titulo = título;
 	}
 
 	public String getTexto() {
