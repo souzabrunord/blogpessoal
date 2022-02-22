@@ -18,13 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.generation.blogpessoal.model.Postagem;
+import com.generation.blogpessoal.model.Tema;
 import com.generation.blogpessoal.repository.PostagemRepository;
+import com.generation.blogpessoal.repository.TemaRepository;
 
 @RestController
 @RequestMapping("/postagens")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class PostagemController {
 
+	@Autowired
+	private TemaRepository temaRepository;
 	
 	@Autowired
 	private PostagemRepository postagemRepository;
@@ -47,18 +51,30 @@ public class PostagemController {
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
 	}
 	
+	
 	@PostMapping
 	public ResponseEntity<Postagem> postPostagem(@Valid @RequestBody Postagem postagem){
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(postagemRepository.save(postagem));
+		if(temaRepository.existsById(postagem.getTema().getId())) {
+		
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(postagemRepository.save(postagem));
+			}
+		else {
+			return ResponseEntity.notFound().build();
+		}		
 	}
 	
 	@PutMapping
 	public ResponseEntity<Postagem> putPostagem(@Valid @RequestBody Postagem postagem){
-        return postagemRepository.findById(postagem.getId())
-                .map(resposta -> ResponseEntity.ok(postagemRepository.save(postagem)))
-                .orElse(ResponseEntity.notFound().build());
-    }
+		if(temaRepository.existsById(postagem.getTema().getId())) {
+		
+			return  ResponseEntity.ok(postagemRepository.save(postagem));
+			}
+		else {
+			return ResponseEntity.notFound().build();
+		}		
+	}
+	
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Object> deletePostagem(@PathVariable Long id) {
@@ -68,19 +84,9 @@ public class PostagemController {
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         })
                 .orElse(ResponseEntity.notFound().build()); 
-	
-	
 		
-		
-		
-	}	
-				
-				
-				
-			
-				
+		}				
 	}
 	
 	
 	
-}
